@@ -16,29 +16,6 @@
 
 create schema if not exists initial;
 
-create table initial.spotify_raw (
-    rank                int,
-    title               varchar(200),
-    artists             varchar(500),
-    date                date,
-    danceability        numeric,
-    energy              numeric,
-    loudness            numeric,
-    speechiness         numeric,
-    acousticness        numeric,
-    instrumentalness    numeric,
-    valence             numeric,
-    num_artists         int,
-    artist_ind          varchar(200),
-    num_nationality     int,
-    nationality         varchar(100),
-    continent           varchar(100),
-    points_total        int,
-    points_ind          numeric,
-    spotify_id          varchar(100),
-    song_url            text
-);
-
 -- Creamos un esquema para almacenar todo el modelo de datos del dominio
 create schema core;
 
@@ -73,6 +50,32 @@ grant execute on all procedures in schema core to spotify_usr;
 -- privilegios sobre objetos futuros
 alter default privileges in schema core grant select, insert, update, delete on tables TO spotify_usr;
 alter default privileges in schema core grant execute on routines to spotify_usr;
+
+-- Permisos sobre el esquema initial para spotify_app
+GRANT CREATE, USAGE ON SCHEMA initial TO spotify_app;
+
+-- Permisos sobre el esquema initial para spotify_usr
+GRANT USAGE ON SCHEMA initial TO spotify_usr;
+
+-- Privilegios sobre tablas existentes
+GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER ON ALL TABLES IN SCHEMA initial TO spotify_usr;
+
+-- Privilegios sobre secuencias existentes
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA initial TO spotify_usr;
+
+-- Privilegios sobre funciones existentes
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA initial TO spotify_usr;
+
+-- Privilegios sobre procedimientos existentes
+GRANT EXECUTE ON ALL PROCEDURES IN SCHEMA initial TO spotify_usr;
+
+-- Privilegios sobre objetos futuros
+ALTER DEFAULT PRIVILEGES IN SCHEMA initial 
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO spotify_usr;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA initial 
+    GRANT EXECUTE ON ROUTINES TO spotify_usr;
+
 
 alter user spotify_usr set search_path to core;
 
